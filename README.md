@@ -13,7 +13,7 @@ A Verilog implementation of an SPI slave interface backed by a single-port RAM, 
 - Includes an Integrated Logic Analyzer (ILA) hookup for on-hardware debug via Vivado
 
 ## Architecture
-
+![SPI_Wrapper architecture diagram](spi_wrapper_pins.png)
 git add spi_wrapper_pins.png
 git commit -m "add architecture diagram"
 git push
