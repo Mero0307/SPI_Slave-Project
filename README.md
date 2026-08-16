@@ -14,10 +14,6 @@ A Verilog implementation of an SPI slave interface backed by a single-port RAM, 
 
 ## Architecture
 ![SPI_Wrapper architecture diagram](spi_wrapper_pins.png)
-git add spi_wrapper_pins.png
-git commit -m "add architecture diagram"
-git push
-
 
 `SPI_Slave` handles the serial protocol and drives a 10-bit `rx_data` bus (2 command bits + 8 address/data bits) into `SPRAM`, pulsing `rx_valid` for one clock when a full command word has been received. `SPRAM` responds to read commands by pulsing `tx_valid` with the requested byte on `tx_data`, which `SPI_Slave` then shifts out on `MISO`.
 
