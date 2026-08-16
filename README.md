@@ -42,23 +42,7 @@ A typical read sequence is: **read address** (set the address to read from) foll
 
 All states return to `IDLE` once `SS_n` goes high.
 
-## Repository structure
 
-SPI_Slave.v SPI protocol handler / FSM
-SPI_Wrapper.v Top-level wrapper instantiating SPI_Slave + SPRAM
-SPRAM.v 256x8 single-port RAM with command decode
-tb_spi_slave.v Self-checking testbench
-SPI_Wrapper.xdc Basys3 pin/timing constraints + ILA debug core
-
-
-## Simulation
-
-Simulated with [Icarus Verilog](http://iverilog.icarus.com/):
-
-```bash
-iverilog -o sim SPI_Slave.v SPI_Wrapper.v SPRAM.v tb_spi_slave.v
-vvp sim
-```
 
 The testbench exercises all four commands (write address, write data, read address, read data) and checks the shifted-out `MISO` data against the expected memory contents.
 
@@ -66,4 +50,3 @@ The testbench exercises all four commands (write address, write data, read addre
 
 `SPI_Wrapper.xdc` maps the design to the Basys3 board (100 MHz system clock, switches for `rstn`/`SS_n`/`MOSI`, an LED for `MISO`) and sets up an ILA core for on-board probing of `MOSI`, `MISO`, `SS_n`, `rstn`, and `clk`.
 
-> **Note:** The ILA debug core introduces an internal hold-timing path (`probeDelay1_reg`) unrelated to the SPI/RAM logic. A `set_false_path -hold` exception for it is included at the end of the XDC — it must stay **after** the `create_debug_core`/`connect_debug_port` calls, since the probe-delay cells don't exist until the debug core is built.
