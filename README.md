@@ -12,18 +12,19 @@ A Verilog implementation of an SPI slave interface backed by a single-port RAM, 
 - Verified in simulation with a self-checking testbench
 - Includes an Integrated Logic Analyzer (ILA) hookup for on-hardware debug via Vivado
 
-## Architecture
-             ┌─────────────────────── SPI_Wrapper ───────────────────────┐
-             │                                                            │
-
-MOSI ─────────►│ │
-SS_n ─────────►│ rx_data ──────────► │
-clk ─────────►│ SPI_Slave rx_valid ─────────► SPRAM │
-rstn ─────────►│ 256x8 mem │
-│ ◄────────── tx_data │
-MISO ◄─────────│ ◄───────── tx_valid │
-│ │
-└────────────────────────────────────────────────────────────┘
+## Architecture```mermaid
+flowchart LR
+    subgraph SPI_Wrapper
+        direction LR
+        MOSI --> SPI_Slave
+        SS_n --> SPI_Slave
+        clk --> SPI_Slave
+        rstn --> SPI_Slave
+        SPI_Slave -- rx_data, rx_valid --> SPRAM
+        SPRAM -- tx_data, tx_valid --> SPI_Slave
+        SPI_Slave --> MISO
+    end
+```
 
 
 `SPI_Slave` handles the serial protocol and drives a 10-bit `rx_data` bus (2 command bits + 8 address/data bits) into `SPRAM`, pulsing `rx_valid` for one clock when a full command word has been received. `SPRAM` responds to read commands by pulsing `tx_valid` with the requested byte on `tx_data`, which `SPI_Slave` then shifts out on `MISO`.
